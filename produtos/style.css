@@ -139,3 +139,30 @@
     color: #636e72;
     padding: 4px 0;
 }
+
+/* Botão Voltar para Tela Inicial */
+.btn-voltar {
+    display: inline-flex;
+    align-items: center;
+    text-decoration: none;
+    color: #888;
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-bottom: 20px;
+    transition: all 0.3s ease;
+    padding: 8px 16px;
+    border-radius: 50px;
+    border: 1px solid transparent;
+}
+
+.btn-voltar:hover {
+    color: var(--vibrant);
+    background-color: var(--yellow);
+    border-color: rgba(255, 159, 28, 0.2);
+    transform: translateX(-5px); /* Efeito sutil de movimento para a esquerda */
+}
+
+.btn-voltar svg {
+    margin-right: 8px;
+    transition: transform 0.3s ease;
+}
