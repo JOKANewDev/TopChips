@@ -20,9 +20,17 @@
             color: var(--texto);
             margin: 0;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
+        }
+
+        .container-voltar {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            margin-bottom: 5px;
         }
 
         .container {
@@ -52,6 +60,26 @@
             align-items: center;
             margin-bottom: 8px;
         }
+
+        .btn-voltar {
+            display: inline-flex;
+            align-items: center;
+            text-decoration: none;
+            color: #888;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            padding: 8px 16px;
+            border-radius: 50px;
+        }
+
+        .btn-voltar:hover {
+            color: var(--laranja-suave);
+            background-color: rgba(255, 215, 0, 0.1);
+            transform: scale(1.05);
+        }
+
+        .btn-voltar svg { margin-right: 8px; }
 
         .product-info strong { font-size: 0.95rem; display: block; }
         
@@ -94,33 +122,34 @@
 
         .total-box h2 { margin: 0; font-size: 1.8rem; }
 
-        .button-group { display: grid; gap: 8px; }
-        button {
+        .btn-fazer-pedido {
+            width: 100%;
             border: none;
-            padding: 12px;
+            padding: 15px;
             border-radius: 12px;
-            font-weight: 600;
+            font-weight: 700;
             cursor: pointer;
             font-family: 'Poppins', sans-serif;
+            background: #25D366;
+            color: white;
+            font-size: 1.1rem;
+            transition: transform 0.2s;
         }
 
-        .btn-msg { background: var(--laranja-suave); color: white; }
-        .btn-copy { background: #EEE; color: #555; }
-        .btn-wa { background: #25D366; color: white; }
-
-        #outputMessage {
-            margin-top: 15px;
-            padding: 12px;
-            background: #F1F1F1;
-            border-radius: 10px;
-            font-size: 0.8rem;
-            white-space: pre-wrap;
-            display: none;
-            border: 1px solid #DDD;
-        }
+        .btn-fazer-pedido:active { transform: scale(0.98); }
     </style>
 </head>
 <body>
+
+    <div class="container-voltar">
+        <a href="../index.html" class="btn-voltar">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="19" y1="12" x2="5" y2="12"></line>
+                <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+            Voltar para o início
+        </a>
+    </div>
 
 <div class="container">
     <div class="header">
@@ -189,13 +218,7 @@
         <h2 id="totalDisplay">R$ 0,00</h2>
     </div>
 
-    <div class="button-group">
-        <button class="btn-msg" onclick="gerarMensagem()">Gerar Mensagem</button>
-        <button class="btn-copy" onclick="copiarMensagem()">Copiar Mensagem</button>
-        <button class="btn-wa" onclick="abrirWhatsApp()">Enviar para WhatsApp</button>
-    </div>
-
-    <div id="outputMessage"></div>
+    <button class="btn-fazer-pedido" onclick="fazerPedido()">Fazer Pedido</button>
 </div>
 
 <script>
@@ -222,38 +245,26 @@ function calcular() {
     return total;
 }
 
-function gerarMensagem() {
+function fazerPedido() {
     const q1 = parseInt(document.getElementById("p1").value) || 0;
     const q2 = parseInt(document.getElementById("p2").value) || 0;
     const q3 = parseInt(document.getElementById("p3").value) || 0;
     const f = parseFloat(document.getElementById("frete").value) || 0;
     const total = calcular();
 
-    if(q1 + q2 + q3 === 0) { alert("Selecione um produto!"); return; }
+    if(q1 + q2 + q3 === 0) { 
+        alert("Selecione pelo menos um item para o pedido! 🍌"); 
+        return; 
+    }
 
     let itens = "";
     if(q1 > 0) itens += `* Família Crocante (1kg) - ${document.getElementById('s1').value} - Qtd: ${q1}\n`;
     if(q2 > 0) itens += `* Meio Kilo de Felicidade (500g) - ${document.getElementById('s2').value} - Qtd: ${q2}\n`;
     if(q3 > 0) itens += `* Snack Express (40g) - ${document.getElementById('s3').value} - Qtd: ${q3}\n`;
 
-    const msg = `Olá! 🍌\n\nSegue seu pedido Banana TopChips:\n${itens}\nEntrega: R$ ${formatar(f)}\nTotal: R$ ${formatar(total)}\n\nObrigado pela preferência! 💛`;
-
-    const out = document.getElementById("outputMessage");
-    out.innerText = msg;
-    out.style.display = "block";
-}
-
-function copiarMensagem() {
-    const txt = document.getElementById("outputMessage").innerText;
-    if(!txt) return alert("Gere a mensagem primeiro!");
-    navigator.clipboard.writeText(txt);
-    alert("Copiado!");
-}
-
-function abrirWhatsApp() {
-    const txt = document.getElementById("outputMessage").innerText;
-    if(!txt) return alert("Gere a mensagem primeiro!");
-    window.open(`https://wa.me/?text=${encodeURIComponent(txt)}`, '_blank');
+    const msg = `Olá! 🍌\n\nSegue meu pedido Banana TopChips:\n${itens}\nEntrega: R$ ${formatar(f)}\nTotal: R$ ${formatar(total)}\n\nObrigado pela preferência! 💛`;
+    
+    window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
 }
 
 window.onload = () => {
