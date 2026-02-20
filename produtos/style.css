@@ -1,0 +1,118 @@
+        :root {
+            --amarelo-ouro: #FFD700;
+            --laranja-suave: #FFB347;
+            --branco-neve: #FAFAFA;
+            --texto-escuro: #2D2D2D;
+            --sombra: rgba(0, 0, 0, 0.08);
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--branco-neve);
+            color: var(--texto-escuro);
+            margin: 0;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--texto-escuro);
+            letter-spacing: -1px;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            max-width: 1100px;
+            width: 100%;
+        }
+
+        .card {
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 10px 30px var(--sombra);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            border: 1px solid rgba(0,0,0,0.03);
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.12);
+        }
+
+        .icon-area {
+            font-size: 50px;
+            margin-bottom: 15px;
+            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));
+        }
+
+        .card h2 {
+            font-size: 1.4rem;
+            margin: 10px 0;
+            color: #1a1a1a;
+        }
+
+        .peso {
+            display: inline-block;
+            background: #fff8e1;
+            color: #b8860b;
+            padding: 5px 15px;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .descricao {
+            font-size: 0.95rem;
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 25px;
+        }
+
+        .preco {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--texto-escuro);
+            margin-bottom: 25px;
+        }
+
+        .btn-comprar {
+            background: linear-gradient(135deg, var(--amarelo-ouro), var(--laranja-suave));
+            color: #fff;
+            text-decoration: none;
+            padding: 15px 30px;
+            border-radius: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: opacity 0.2s ease, transform 0.1s ease;
+            box-shadow: 0 4px 15px rgba(255, 179, 71, 0.4);
+        }
+
+        .btn-comprar:hover {
+            opacity: 0.9;
+        }
+
+        .btn-comprar:active {
+            transform: scale(0.97);
+        }
+
+        @media (max-width: 768px) {
+            h1 { font-size: 2rem; }
+        }
