@@ -9,40 +9,85 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body { 
-            background: linear-gradient(135deg, #FFFDF5 0%, #FFF9E1 100%); 
-            font-family: 'Inter', sans-serif; /* Aplicando a fonte bonita */
-        }
-        .btn-banana { background-color: #facc15; transition: all 0.3s; }
-        .btn-banana:hover { background-color: #eab308; transform: translateY(-2px); }
-        .card-banana { border-radius: 20px; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05); }
-        .modal-bg { background-color: rgba(0,0,0,0.4); backdrop-filter: blur(4px); }
-        /* Ajuste para títulos ficarem mais marcantes */
-        h1, h2, h3 { letter-spacing: -0.025em; }
+    background: linear-gradient(135deg, #FFFDF5 0%, #FFF9E1 100%);
+    font-family: 'Inter', sans-serif;
+}
 
-        .btn-voltar {
+/* Botão amarelo */
+.btn-banana { 
+    background: linear-gradient(135deg, #FACC15, #EAB308);
+    transition: all 0.25s ease;
+    box-shadow: 0 6px 14px rgba(250, 204, 21, 0.35);
+}
+
+.btn-banana:hover { 
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(250, 204, 21, 0.45);
+}
+
+/* Cards */
+.card-banana { 
+    border-radius: 22px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+    transition: all 0.25s ease;
+}
+
+.card-banana:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 18px 35px rgba(0, 0, 0, 0.08);
+}
+
+/* Painel carrinho */
+.cart-panel {
+    background: rgba(255, 255, 255, 0.75);
+    backdrop-filter: blur(10px);
+    border-radius: 32px;
+    box-shadow: 0 25px 50px rgba(0,0,0,0.08);
+    border: 1px solid rgba(255,255,255,0.4);
+}
+
+/* Modal */
+.modal-bg { 
+    background-color: rgba(0,0,0,0.35);
+    backdrop-filter: blur(6px);
+}
+
+/* Inputs */
+input {
+    transition: all 0.2s ease;
+}
+
+input:focus {
+    transform: scale(1.02);
+}
+
+/* Botão voltar */
+.btn-voltar {
     display: inline-flex;
     align-items: center;
     text-decoration: none;
-    color: #888;
+    color: #9ca3af;
     font-size: 0.9rem;
     font-weight: 600;
-    margin-bottom: 20px;
-    transition: all 0.3s ease;
-    padding: 8px 16px;
-    border-radius: 50px;
-    border: 1px solid transparent;
+    transition: all 0.25s ease;
+    padding: 10px 18px;
+    border-radius: 999px;
 }
 
 .btn-voltar:hover {
-    color: var(--vibrant);
-    background-color: var(--yellow);
-    border-color: rgba(255, 159, 28, 0.2);
-    transform: translateX(-5px); /* Efeito sutil de movimento para a esquerda */
+    color: #d97706;
+    background: #FEF3C7;
+    transform: translateX(-4px);
 }
 
 .btn-voltar svg {
     margin-right: 8px;
-    transition: transform 0.3s ease;
+}
+
+/* Total */
+#total-price {
+    font-size: 28px;
+    font-weight: 900;
 }
     </style>
 </head>
