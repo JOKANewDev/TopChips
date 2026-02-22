@@ -229,15 +229,24 @@ input:focus {
         <div class="bg-white rounded-[40px] p-8 max-w-sm w-full shadow-2xl">
             <h3 id="modal-title" class="text-xl font-extrabold mb-4 text-gray-800 text-center uppercase italic"></h3>
             
-            <div class="space-y-2 mb-6 text-sm">
-                <label class="flex items-center gap-3 p-4 border rounded-2xl cursor-pointer hover:bg-yellow-50 transition border-gray-100 font-semibold">
-                    <input type="checkbox" name="flavor" value="Tradicional Salgada" class="w-5 h-5 accent-yellow-500"> Tradicional Salgada
+            <div class="grid grid-cols-1 gap-2 mb-6 text-sm">
+                <label class="flex items-center gap-3 p-3 border rounded-2xl cursor-pointer hover:bg-yellow-50 transition border-gray-100 font-semibold">
+                    <input type="checkbox" name="flavor" value="Tradicional" class="w-5 h-5 accent-yellow-500"> Tradicional
                 </label>
-                <label class="flex items-center gap-3 p-4 border rounded-2xl cursor-pointer hover:bg-yellow-50 transition border-gray-100 font-semibold">
-                    <input type="checkbox" name="flavor" value="Doce com Canela" class="w-5 h-5 accent-yellow-500"> Doce com Canela
+                <label class="flex items-center gap-3 p-3 border rounded-2xl cursor-pointer hover:bg-yellow-50 transition border-gray-100 font-semibold">
+                    <input type="checkbox" name="flavor" value="Churros" class="w-5 h-5 accent-yellow-500"> Churros
                 </label>
-                <label class="flex items-center gap-3 p-4 border rounded-2xl cursor-pointer hover:bg-yellow-50 transition border-gray-100 font-semibold">
-                    <input type="checkbox" name="flavor" value="Pimenta e Limão" class="w-5 h-5 accent-yellow-500"> Pimenta e Limão
+                <label class="flex items-center gap-3 p-3 border rounded-2xl cursor-pointer hover:bg-yellow-50 transition border-gray-100 font-semibold">
+                    <input type="checkbox" name="flavor" value="Leite Ninho" class="w-5 h-5 accent-yellow-500"> Leite Ninho
+                </label>
+                <label class="flex items-center gap-3 p-3 border rounded-2xl cursor-pointer hover:bg-yellow-50 transition border-gray-100 font-semibold">
+                    <input type="checkbox" name="flavor" value="Limão Pepper" class="w-5 h-5 accent-yellow-500"> Limão Pepper
+                </label>
+                <label class="flex items-center gap-3 p-3 border rounded-2xl cursor-pointer hover:bg-yellow-50 transition border-gray-100 font-semibold">
+                    <input type="checkbox" name="flavor" value="Paprica Picante" class="w-5 h-5 accent-yellow-500"> Paprica Picante
+                </label>
+                <label class="flex items-center gap-3 p-3 border rounded-2xl cursor-pointer hover:bg-yellow-50 transition border-gray-100 font-semibold">
+                    <input type="checkbox" name="flavor" value="Alho" class="w-5 h-5 accent-yellow-500"> Alho
                 </label>
             </div>
             
@@ -380,7 +389,6 @@ input:focus {
                 return; 
             }
 
-            // ✅ Loading moderno mantido
             const btn = document.getElementById("checkout-btn");
             const originalText = btn.innerText;
 
@@ -389,7 +397,6 @@ input:focus {
 
             setTimeout(() => {
 
-                // ✅ TEXTO ANTIGO RESTAURADO
                 let message = `Olá, gostaria de fazer um pedido Banana TopChips.\n\nCliente: ${name}\n\nPedido:\n`;
                 let total = 0;
 
@@ -414,7 +421,6 @@ input:focus {
                     '_blank'
                 );
 
-                // ✅ Reset botão mantido
                 btn.disabled = false;
                 btn.innerText = originalText;
 
@@ -431,7 +437,6 @@ input:focus {
         toast.textContent = message;
         toast.classList.remove("hidden");
         
-        // Pequeno delay para a transição CSS funcionar se estava hidden
         setTimeout(() => toast.classList.add("show"), 10);
 
         toastTimeout = setTimeout(() => {
