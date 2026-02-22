@@ -1,14 +1,14 @@
         :root {
             --amarelo-ouro: #FFD700;
             --laranja-suave: #FFB347;
-            --branco-neve: #FAFAFA;
+            --branco-neve: #e6e1e1;
             --texto-escuro: #2D2D2D;
             --sombra: rgba(0, 0, 0, 0.08);
         }
 
         body {
             font-family: 'Poppins', sans-serif;
-            background-color: var(--branco-neve);
+            background: linear-gradient(135deg, #FFF9E1 0%, #FFFFFF 100%);
             color: var(--texto-escuro);
             margin: 0;
             padding: 40px 20px;
