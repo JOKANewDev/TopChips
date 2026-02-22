@@ -244,14 +244,12 @@ footer {
 }
 .image-ico {
     padding: 8px 16px;
-    /* Adicione estas linhas abaixo */
     display: flex;
     justify-content: center;
     align-items: center;
-    overflow: hidden; /* Garante que nada saia da borda */
+    overflow: hidden;
 }
 
-/* É crucial configurar a imagem que está DENTRO da div */
 .image-ico img {
     max-width: 100%;  /* Não deixa a imagem ser maior que o card */
     height: 90px;     /* Mantém a proporção */
