@@ -103,7 +103,8 @@ input:focus {
     bottom: 30px;
     left: 50%;
     transform: translateX(-50%) translateY(20px);
-    background: linear-gradient(135deg, #FACC15, #EAB308);
+    backdrop-filter: blur(8px);
+    background: rgba(250, 204, 21, 0.95);
     color: #1f2933;
     padding: 14px 22px;
     border-radius: 999px;
@@ -111,7 +112,8 @@ input:focus {
     font-weight: 600;
     box-shadow: 0 10px 25px rgba(0,0,0,0.15);
     opacity: 0;
-    transition: all 0.35s ease;
+    
+    transition: all 0.4s cubic-bezier(.22,1,.36,1);
     z-index: 9999;
 }
 
@@ -176,7 +178,12 @@ input:focus {
             </div>
 
             <div class="cart-panel p-6 h-fit sticky top-8">
-                <h2 class="text-lg font-extrabold text-gray-800 mb-6 flex items-center gap-2 uppercase text-sm tracking-tighter">🛒 Resumo do Pedido</h2>
+            <h2 class="text-lg font-extrabold text-gray-800 mb-6 flex items-center gap-2 uppercase text-sm tracking-tighter">
+                🛒 Resumo do Pedido
+                <span id="cart-badge" class="hidden bg-yellow-400 text-gray-900 text-[10px] font-black px-2 py-1 rounded-full">
+                    0
+                </span>
+            </h2>
                 
                 <div id="cart-items" class="space-y-4 mb-6 max-h-60 overflow-y-auto">
                     <p class="text-gray-400 text-center py-4 italic text-sm">Carrinho vazio</p>
@@ -211,7 +218,7 @@ input:focus {
                     </div>
                 </div>
 
-                <button onclick="checkout()" class="w-full mt-6 bg-gradient-to-r from-orange-500 to-amber-400 hover:brightness-110 text-white font-extrabold py-5 rounded-3xl shadow-lg transition-all flex justify-center items-center gap-2 uppercase tracking-widest text-sm">
+                <button id="checkout-btn" onclick="checkout()" class="w-full mt-6 bg-gradient-to-r from-orange-500 to-amber-400 hover:brightness-110 text-white font-extrabold py-5 rounded-3xl shadow-lg transition-all flex justify-center items-center gap-2 uppercase tracking-widest text-sm">
                     Fazer Pedido
                 </button>
             </div>
@@ -251,83 +258,104 @@ input:focus {
     </div>
 
     <script>
-        let cart = [];
-        let currentProduct = null;
-        let qty = 1;
-        const deliveryFee = 5.00;
+    let cart = [];
+    let currentProduct = null;
+    let qty = 1;
+    const deliveryFee = 5.00;
 
-        function maskCEP(input) {
-            let value = input.value.replace(/\D/g, "");
-            if (value.length > 5) {
-                value = value.substring(0, 5) + "-" + value.substring(5, 8);
-            }
-            input.value = value;
+    // Mascara de CEP
+    function maskCEP(input) {
+        let value = input.value.replace(/\D/g, "");
+        if (value.length > 5) {
+            value = value.substring(0, 5) + "-" + value.substring(5, 8);
+        }
+        input.value = value;
+    }
+
+    function openFlavorModal(name, price) {
+        currentProduct = { name, price };
+        qty = 1;
+        document.getElementById('modal-qty').innerText = qty;
+        document.getElementById('modal-title').innerText = name;
+        document.getElementById('flavor-modal').classList.remove('hidden');
+    }
+
+    function closeModal() {
+        document.getElementById('flavor-modal').classList.add('hidden');
+        document.querySelectorAll('input[name="flavor"]').forEach(cb => cb.checked = false);
+    }
+
+    function changeQty(val) {
+        qty = Math.max(1, qty + val);
+        document.getElementById('modal-qty').innerText = qty;
+    }
+
+    function addToCart() {
+        const flavorsArray = Array.from(document.querySelectorAll('input[name="flavor"]:checked')).map(cb => cb.value);
+        
+        if (flavorsArray.length === 0) { 
+            alert("Escolha pelo menos um sabor!"); 
+            return; 
         }
 
-        function openFlavorModal(name, price) {
-            currentProduct = { name, price };
-            qty = 1;
-            document.getElementById('modal-qty').innerText = qty;
-            document.getElementById('modal-title').innerText = name;
-            document.getElementById('flavor-modal').classList.remove('hidden');
+        cart.push({
+            id: Date.now(),
+            name: currentProduct.name,
+            price: currentProduct.price,
+            flavors: flavorsArray.join(", "),
+            qty: qty,
+            subtotal: currentProduct.price * qty
+        });
+
+        updateCartUI();
+        showToast("Item adicionado ao carrinho 🛒");
+        closeModal();
+    }
+
+    function removeItem(id) {
+        cart = cart.filter(item => item.id !== id);
+        updateCartUI();
+    }
+
+    function updateCartUI() {
+        const badge = document.getElementById("cart-badge");
+        const container = document.getElementById('cart-items');
+        const totalEl = document.getElementById('total-price');
+        
+        const totalItems = cart.reduce((acc, item) => acc + item.qty, 0);
+
+        // Atualiza Badge
+        if (totalItems > 0) {
+            badge.innerText = totalItems;
+            badge.classList.remove("hidden");
+        } else {
+            badge.classList.add("hidden");
         }
 
-        function closeModal() {
-            document.getElementById('flavor-modal').classList.add('hidden');
-            document.querySelectorAll('input[name="flavor"]').forEach(cb => cb.checked = false);
+        // Atualiza Lista
+        if (cart.length === 0) {
+            container.innerHTML = '<p class="text-gray-400 text-center py-4 italic text-sm">Carrinho vazio</p>';
+            totalEl.innerText = `R$ 5,00`;
+            return;
         }
 
-        function changeQty(val) {
-            qty = Math.max(1, qty + val);
-            document.getElementById('modal-qty').innerText = qty;
-        }
-
-        function addToCart() {
-            const flavorsArray = Array.from(document.querySelectorAll('input[name="flavor"]:checked')).map(cb => cb.value);
-            if (flavorsArray.length === 0) { alert("Escolha o sabor primeiro!"); return; }
-
-            cart.push({
-                id: Date.now(),
-                name: currentProduct.name,
-                price: currentProduct.price,
-                flavors: flavorsArray.join(", "),
-                qty: qty,
-                subtotal: currentProduct.price * qty
-            });
-            updateCartUI();
-            showToast("Item adicionado ao carrinho 🛒");
-            closeModal();
-        }
-
-        function removeItem(id) {
-            cart = cart.filter(item => item.id !== id);
-            updateCartUI();
-        }
-
-        function updateCartUI() {
-            const container = document.getElementById('cart-items');
-            const totalEl = document.getElementById('total-price');
-            if (cart.length === 0) {
-                container.innerHTML = '<p class="text-gray-400 text-center py-4 italic text-sm">Carrinho vazio</p>';
-                totalEl.innerText = `R$ 5,00`;
-                return;
-            }
-            container.innerHTML = cart.map(item => `
-                <div class="flex justify-between items-start border-b border-gray-50 pb-3">
-                    <div class="flex-1 pr-2">
-                        <h4 class="font-bold text-gray-800 text-sm leading-tight">${item.name}</h4>
-                        <p class="text-[10px] text-gray-400 font-extrabold uppercase mt-1 tracking-wider">${item.flavors}</p>
-                        <p class="text-xs font-bold text-yellow-600 mt-1 uppercase tracking-tighter">${item.qty} x R$ ${item.price.toFixed(2).replace('.', ',')}</p>
-                    </div>
-                    <div class="text-right">
-                        <button onclick="removeItem(${item.id})" class="text-red-400 text-[9px] font-black uppercase tracking-tighter hover:underline">Remover</button>
-                        <p class="font-extrabold text-gray-800 text-sm mt-1 italic">R$ ${item.subtotal.toFixed(2).replace('.', ',')}</p>
-                    </div>
+        container.innerHTML = cart.map(item => `
+            <div class="flex justify-between items-start border-b border-gray-50 pb-3">
+                <div class="flex-1 pr-2">
+                    <h4 class="font-bold text-gray-800 text-sm leading-tight">${item.name}</h4>
+                    <p class="text-[10px] text-gray-400 font-extrabold uppercase mt-1 tracking-wider">${item.flavors}</p>
+                    <p class="text-xs font-bold text-yellow-600 mt-1 uppercase tracking-tighter">${item.qty} x R$ ${item.price.toFixed(2).replace('.', ',')}</p>
                 </div>
-            `).join('');
-            const subtotal = cart.reduce((acc, item) => acc + item.subtotal, 0);
-            totalEl.innerText = `R$ ${(subtotal + deliveryFee).toFixed(2).replace('.', ',')}`;
-        }
+                <div class="text-right">
+                    <button onclick="removeItem(${item.id})" class="text-red-400 text-[9px] font-black uppercase tracking-tighter hover:underline">Remover</button>
+                    <p class="font-extrabold text-gray-800 text-sm mt-1 italic">R$ ${item.subtotal.toFixed(2).replace('.', ',')}</p>
+                </div>
+            </div>
+        `).join('');
+
+        const subtotal = cart.reduce((acc, item) => acc + item.subtotal, 0);
+        totalEl.innerText = `R$ ${(subtotal + deliveryFee).toFixed(2).replace('.', ',')}`;
+    }
 
         function checkout() {
             const name = document.getElementById('cust-name').value.trim();
@@ -337,40 +365,81 @@ input:focus {
             const bairro = document.getElementById('end-bairro').value.trim();
             const ref = document.getElementById('end-ref').value.trim();
 
-            if (cart.length === 0) { alert("Adicione produtos ao carrinho!"); return; }
-            if (!name || !cep || !rua || !num || !bairro) { alert("Preencha os campos de entrega!"); return; }
-            if (cep.length < 9) { alert("CEP incompleto!"); return; }
+            if (cart.length === 0) { 
+                alert("Adicione produtos ao carrinho!"); 
+                return; 
+            }
 
-            let message = `Olá, gostaria de fazer um pedido Banana TopChips.\n\nCliente: ${name}\n\nPedido:\n`;
-            let total = 0;
-            cart.forEach(item => {
-                message += `\n${item.name}\nSabores: ${item.flavors}\nQuantidade: ${item.qty}\n`;
-                total += item.subtotal;
-            });
-            total += deliveryFee;
-            message += `\nEntrega: R$ 5,00\nTotal do pedido: R$ ${total.toFixed(2).replace('.', ',')}\n\nEndereço:\nCEP: ${cep}\nRua: ${rua}, ${num}\nBairro: ${bairro}\nRef: ${ref || 'Não informada'}\n\nAguardo confirmação, obrigado.`;
+            if (!name || !cep || !rua || !num || !bairro) { 
+                alert("Preencha todos os campos de entrega!"); 
+                return; 
+            }
 
-            window.open(`https://wa.me/5516996378502?text=${encodeURIComponent(message)}`, '_blank');
+            if (cep.length < 9) { 
+                alert("CEP incompleto!"); 
+                return; 
+            }
+
+            // ✅ Loading moderno mantido
+            const btn = document.getElementById("checkout-btn");
+            const originalText = btn.innerText;
+
+            btn.disabled = true;
+            btn.innerText = "Processando...";
+
+            setTimeout(() => {
+
+                // ✅ TEXTO ANTIGO RESTAURADO
+                let message = `Olá, gostaria de fazer um pedido Banana TopChips.\n\nCliente: ${name}\n\nPedido:\n`;
+                let total = 0;
+
+                cart.forEach(item => {
+                    message += `\n${item.name}\nSabores: ${item.flavors}\nQuantidade: ${item.qty}\n`;
+                    total += item.subtotal;
+                });
+
+                total += deliveryFee;
+
+                message += `\nEntrega: R$ 5,00`;
+                message += `\nTotal do pedido: R$ ${total.toFixed(2).replace('.', ',')}\n\n`;
+                message += `Endereço:\n`;
+                message += `CEP: ${cep}\n`;
+                message += `Rua: ${rua}, ${num}\n`;
+                message += `Bairro: ${bairro}\n`;
+                message += `Ref: ${ref || 'Não informada'}\n\n`;
+                message += `Aguardo confirmação, obrigado.`;
+
+                window.open(
+                    `https://wa.me/5516996378502?text=${encodeURIComponent(message)}`,
+                    '_blank'
+                );
+
+                // ✅ Reset botão mantido
+                btn.disabled = false;
+                btn.innerText = originalText;
+
+                showToast("Pedido enviado 🚀");
+
+            }, 800);
         }
-        function showToast(message) {
-    const toast = document.getElementById("toast");
 
-    toast.textContent = message;
-    toast.classList.remove("hidden");
+    let toastTimeout;
+    function showToast(message) {
+        const toast = document.getElementById("toast");
+        clearTimeout(toastTimeout);
 
-    setTimeout(() => {
-        toast.classList.add("show");
-    }, 10);
+        toast.textContent = message;
+        toast.classList.remove("hidden");
+        
+        // Pequeno delay para a transição CSS funcionar se estava hidden
+        setTimeout(() => toast.classList.add("show"), 10);
 
-    setTimeout(() => {
-        toast.classList.remove("show");
-
-        setTimeout(() => {
-            toast.classList.add("hidden");
-        }, 300);
-    }, 2000);
-}
-    </script>
+        toastTimeout = setTimeout(() => {
+            toast.classList.remove("show");
+            setTimeout(() => toast.classList.add("hidden"), 400);
+        }, 2000);
+    }
+</script>
     <div id="toast" class="toast hidden">
     Item adicionado ao carrinho 🛒
 </div>
