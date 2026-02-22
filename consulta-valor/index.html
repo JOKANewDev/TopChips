@@ -89,6 +89,41 @@ input:focus {
     font-size: 28px;
     font-weight: 900;
 }
+#flavor-modal > div {
+    animation: pop 0.25s ease;
+}
+
+@keyframes pop {
+    from { transform: scale(0.95); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+.toast {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: linear-gradient(135deg, #FACC15, #EAB308);
+    color: #1f2933;
+    padding: 14px 22px;
+    border-radius: 999px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+    opacity: 0;
+    transition: all 0.35s ease;
+    z-index: 9999;
+}
+
+.toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+
+.toast.hidden {
+    display: none;
+}
+
     </style>
 </head>
 <body class="p-4 md:p-8">
@@ -260,6 +295,7 @@ input:focus {
                 subtotal: currentProduct.price * qty
             });
             updateCartUI();
+            showToast("Item adicionado ao carrinho 🛒");
             closeModal();
         }
 
@@ -316,6 +352,27 @@ input:focus {
 
             window.open(`https://wa.me/5516996378502?text=${encodeURIComponent(message)}`, '_blank');
         }
+        function showToast(message) {
+    const toast = document.getElementById("toast");
+
+    toast.textContent = message;
+    toast.classList.remove("hidden");
+
+    setTimeout(() => {
+        toast.classList.add("show");
+    }, 10);
+
+    setTimeout(() => {
+        toast.classList.remove("show");
+
+        setTimeout(() => {
+            toast.classList.add("hidden");
+        }, 300);
+    }, 2000);
+}
     </script>
+    <div id="toast" class="toast hidden">
+    Item adicionado ao carrinho 🛒
+</div>
 </body>
 </html>
