@@ -16,7 +16,7 @@
 
 body {
     font-family: 'Poppins', sans-serif;
-    background: radial-gradient(60% 60% at 50% 50%, #FFFDF5 0%, #FFF3C4 100%);
+    background: linear-gradient(135deg, #FFF9E1 0%, #FFFDF5 60%, #FFFFFF 100%);
     color: var(--dark);
     line-height: 1.6;
     overflow-x: hidden;
