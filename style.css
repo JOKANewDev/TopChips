@@ -152,7 +152,7 @@ nav {
     background: var(--white);
     padding: 20px;
     border-radius: 30px;
-    box-shadow: 0 40px 80px rgba(0,0,0,0.1);
+    box-shadow: 0 6px 10px rgb(0, 0, 0.1);
     transform: rotate(3deg);
     transition: 0.5s;
 }
@@ -241,4 +241,20 @@ footer {
     padding: 40px;
     font-size: 0.8rem;
     color: #999;
+}
+.image-ico {
+    padding: 8px 16px;
+    /* Adicione estas linhas abaixo */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden; /* Garante que nada saia da borda */
+}
+
+/* É crucial configurar a imagem que está DENTRO da div */
+.image-ico img {
+    max-width: 100%;  /* Não deixa a imagem ser maior que o card */
+    height: 90px;     /* Mantém a proporção */
+    display: block;   /* Remove espaços indesejados na base */
+    border-radius: 4px; /* Opcional: para combinar com o design */
 }
